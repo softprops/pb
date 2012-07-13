@@ -1,10 +1,10 @@
 organization := "me.lessis"
 
-name := "clip"
+name := "pb"
 
 version  := "0.1.0-SNAPSHOT"
 
-description := "conscript interface for copying input to os clipboards"
+description := "conscript interface for copying input to os paste boards"
 
 resolvers += Classpaths.typesafeResolver
 

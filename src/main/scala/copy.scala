@@ -8,12 +8,18 @@ import scala.util.control.Exception.allCatch
 
 object Copy {
   def apply(a: Array[String]) =
-    Piped(System.in) { s =>
-      allCatch.either {
-        Toolkit.getDefaultToolkit()
+    a match {
+      case Array("--version") =>
+        println("0.1.0")
+        0
+      case _ =>
+        Piped(System.in) { s =>
+          allCatch.either {
+            Toolkit.getDefaultToolkit()
                .getSystemClipboard()
                .setContents(new StringSelection(s), null)
-      } fold({ _ => 1 }, { _ => 0 })
+          } fold({ _ => 1 }, { _ => 0 })
+       }
     }
 }
 

@@ -1,6 +1,6 @@
 package pb
 
-import java.awt.datatransfer.StringSelection
+import java.awt.datatransfer.{StringSelection, Transferable, ClipboardOwner, Clipboard, DataFlavor }
 import java.awt.Toolkit
 
 import xsbti.{ AppMain, AppConfiguration }
@@ -15,10 +15,17 @@ object Copy {
       case _ =>
         Piped(System.in) { s =>
           allCatch.either {
-            Toolkit.getDefaultToolkit()
-               .getSystemClipboard()
-               .setContents(new StringSelection(s), null)
-          } fold({ _ => 1 }, { _ => 0 })
+            val ss = new StringSelection(s)
+            val cb = Toolkit.getDefaultToolkit()
+                            .getSystemClipboard()
+            println("clipboard: %s" format cb)
+            cb.setContents(ss, new ClipboardOwner() {
+              def lostOwnership(b: Clipboard, t: Transferable) {
+                println("%s lost ownership to %s" format(b,t))
+              }
+            })
+            println("contents: %s" format cb.getContents(null).getTransferData(DataFlavor.stringFlavor))
+          } fold({ e => println("opps");e.printStackTrace();1 }, { _ => println("ok");0 })
        }
     }
 }
